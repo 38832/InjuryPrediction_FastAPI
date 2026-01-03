@@ -4,10 +4,10 @@ from pydantic import BaseModel
 import numpy as np
 import pandas as pd
 from joblib import load
-from sklearn.impute import SimpleImputer
+
 
 # Load the trained model
-model = load("injury_prediction_model.joblib")
+model = load("injury_prediction_model.joblib", mmap_mode= "r")
 
 # Define FastAPI app
 app = FastAPI(title="Football Injury Prediction API")
@@ -50,14 +50,10 @@ async def options_predict(response: Response):
 @app.post("/predict")
 def predict_injury(player: PlayerData):
     # Convert input data to DataFrame
-    player_df = pd.DataFrame([player.dict()])
+    player_df = pd.DataFrame([player.model_dump()])
     
-    # Handle missing values (if any)
-    imputer = SimpleImputer(strategy="mean")
-    player_df_imputed = imputer.fit_transform(player_df)
-
     # Make prediction
-    prediction = model.predict(player_df_imputed)
+    prediction = model.predict(player_df.values)
 
     return {
         "injury_likelihood": prediction[0][0],
