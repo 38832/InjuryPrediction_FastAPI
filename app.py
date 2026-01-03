@@ -7,7 +7,7 @@ from joblib import load
 from sklearn.impute import SimpleImputer
 
 # Load the trained model
-model = load("injury_prediction_model.joblib")
+model = load("injury_prediction_model.joblib", mmap_mode="r")
 
 # Define FastAPI app
 app = FastAPI(title="Football Injury Prediction API")
