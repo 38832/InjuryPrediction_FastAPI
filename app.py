@@ -50,7 +50,7 @@ async def options_predict(response: Response):
 @app.post("/predict")
 def predict_injury(player: PlayerData):
     # Convert input data to DataFrame
-    player_df = pd.DataFrame([player.dict()])
+    player_df = pd.DataFrame([player.model_dump()])
     
     # Handle missing values (if any)
     imputer = SimpleImputer(strategy="mean")
